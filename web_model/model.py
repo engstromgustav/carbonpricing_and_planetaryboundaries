@@ -67,283 +67,261 @@ class SolveModel(object):
             "p_Y": ("$p_{Y}$", "(final goods)"),
         }
 
-    def gen_coef_matrix(self, var_dict, biofuel_tax=0, land_policy=False):
+    def gen_coef_matrix(self, var_dict, biofuel_tax=0):
 
         v = var_dict
-        vci = v["vci"]
-        pci = v["pci"]
-        # locals().update(var_dict)# Coefficient  Matrix (rows: equations, columns: variables)
+        vci = v['vci']
+        pci = v['pci']
+        #locals().update(var_dict)# Coefficient  Matrix (rows: equations, columns: variables)
         # note: python vectors starts with index zero
         coef_matrix = np.zeros((41, 41))
-        # print(locals())
+        #print(locals())
         # Policy variable vector (carbon tax)
         policy_vector = np.zeros((41, 1))
 
         ## Populate coefficient matrix and policy vector (note: document equation numbers specified in brackets)
 
         # Market clearing Fixed totat land: eq. [72]
-        coef_matrix[0, vci["L_A"]] = v["Q_LA"]
-        coef_matrix[0, vci["L_T"]] = v["Q_LT"]
-        coef_matrix[0, vci["L_U"]] = v["Q_LU"]
+        coef_matrix[0, vci['L_A']] = v['Q_LA']
+        coef_matrix[0, vci['L_T']] = v['Q_LT']
+        coef_matrix[0, vci['L_U']] = v['Q_LU']
 
         # Market clearing constraint fossil fuel: eq. [73]
-        coef_matrix[1, vci["E"]] = -1
-        coef_matrix[1, vci["E_Eps"]] = v["Q_EEps"]
-        coef_matrix[1, vci["E_P"]] = v["Q_EP"]
-        coef_matrix[1, vci["E_Fi"]] = v["Q_EFi"]
+        coef_matrix[1, vci['E']] = -1
+        coef_matrix[1, vci['E_Eps']] = v['Q_EEps']
+        coef_matrix[1, vci['E_P']] = v['Q_EP']
+        coef_matrix[1, vci['E_Fi']] = v['Q_EFi']
 
         # Market clearing agric. output: eq. [74]
-        coef_matrix[2, vci["A"]] = -1
-        coef_matrix[2, vci["A_B"]] = v["Q_AB"]
-        coef_matrix[2, vci["A_F"]] = v["Q_AF"]
+        coef_matrix[2, vci['A']] = -1
+        coef_matrix[2, vci['A_B']] = v['Q_AB']
+        coef_matrix[2, vci['A_F']] = v['Q_AF']
 
         # Market clearing energy. services: eq. [75]
-        coef_matrix[3, vci["Eps"]] = -1
-        coef_matrix[3, vci["Eps_A"]] = v["Q_EpsA"]
-        coef_matrix[3, vci["Eps_Y"]] = v["Q_EpsY"]
+        coef_matrix[3, vci['Eps']] = -1
+        coef_matrix[3, vci['Eps_A']] = v['Q_EpsA']
+        coef_matrix[3, vci['Eps_Y']] = v['Q_EpsY']
 
         # Agricultural prod. : eq. [76]
-        coef_matrix[4, vci["L_A"]] = v["GammaA_LA"]
-        coef_matrix[4, vci["A"]] = -1.0
-        coef_matrix[4, vci["Eps_A"]] = v["GammaA_EpsA"]
-        coef_matrix[4, vci["P"]] = v["GammaA_P"]
-        coef_matrix[4, vci["W"]] = v["GammaA_W"]
-        coef_matrix[4, vci["MA"]] = v["GammaA_MA"]
+        coef_matrix[4, vci['L_A']] = v['GammaA_LA']
+        coef_matrix[4, vci['A']] = -1.0
+        coef_matrix[4, vci['Eps_A']] = v['GammaA_EpsA']
+        coef_matrix[4, vci['P']] = v['GammaA_P']
+        coef_matrix[4, vci['W']] = v['GammaA_W']
+        coef_matrix[4, vci['MA']] = v['GammaA_MA']
 
         # Timber prod. : eq. [77]
-        coef_matrix[5, vci["L_T"]] = v["GammaT_LT"]
-        coef_matrix[5, vci["T"]] = -1.0
-        coef_matrix[5, vci["MT"]] = v["GammaT_MT"]
+        coef_matrix[5, vci['L_T']] = v['GammaT_LT']
+        coef_matrix[5, vci['T']] = -1.0
+        coef_matrix[5, vci['MT']] = v['GammaT_MT']
 
         # Fertilizer prod. : eq. [78]
-        coef_matrix[6, vci["P"]] = -1
-        coef_matrix[6, vci["E_P"]] = v["GammaP_EP"]
-        coef_matrix[6, vci["Pho"]] = v["GammaP_Pho"]
-        coef_matrix[6, vci["MP"]] = v["GammaP_MP"]
+        coef_matrix[6, vci['P']] = -1
+        coef_matrix[6, vci['E_P']] = v['GammaP_EP']
+        coef_matrix[6, vci['Pho']] = v['GammaP_Pho']
+        coef_matrix[6, vci['MP']] = v['GammaP_MP']
 
         # Energy prod. : eq. [79]
-        coef_matrix[7, vci["Eps"]] = -1.0
-        coef_matrix[7, vci["A_B"]] = v["GammaEps_AB"]
-        coef_matrix[7, vci["E_Eps"]] = v["GammaEps_EEps"]
-        coef_matrix[7, vci["R"]] = v["GammaEps_R"]
+        coef_matrix[7, vci['Eps']] = -1.0
+        coef_matrix[7, vci['A_B']] = v['GammaEps_AB']
+        coef_matrix[7, vci['E_Eps']] = v['GammaEps_EEps']
+        coef_matrix[7, vci['R']] = v['GammaEps_R']
 
         # Final good prod. : eq. [80]
-        coef_matrix[8, vci["Y"]] = -1.0
-        coef_matrix[8, vci["Eps_Y"]] = v["GammaY_EpsY"]
-        coef_matrix[8, vci["MY"]] = v["GammaY_MY"]
+        coef_matrix[8, vci['Y']] = -1.0
+        coef_matrix[8, vci['Eps_Y']] = v['GammaY_EpsY']
+        coef_matrix[8, vci['MY']] = v['GammaY_MY']
 
         # Fisheries prod.
-        coef_matrix[9, vci["Fi"]] = -1.0
-        coef_matrix[9, vci["E_Fi"]] = v["GammaFi_EFi"]
-        coef_matrix[9, vci["MFi"]] = v["GammaFi_MFi"]
+        coef_matrix[9, vci['Fi']] = -1.0
+        coef_matrix[9, vci['E_Fi']] = v['GammaFi_EFi']
+        coef_matrix[9, vci['MFi']] = v['GammaFi_MFi']
 
         # foc: agric. wrt land use
-        coef_matrix[10, pci["p_A"]] = 1
-        coef_matrix[10, pci["p_L"]] = -1
-        coef_matrix[10, vci["L_A"]] = -v["V_A"] - 1 / v["sigma_A"]
-        coef_matrix[10, vci["A"]] = 1 / v["sigma_A"]
+        coef_matrix[10, pci['p_A']] = 1
+        coef_matrix[10, pci['p_L']] = -1
+        coef_matrix[10, vci['L_A']] = -v['V_A'] - 1/v['sigma_A']
+        coef_matrix[10, vci['A']] = 1/v['sigma_A']
 
         # foc: agric. wrt P (fertiliz)
-        coef_matrix[11, pci["p_A"]] = 1
-        coef_matrix[11, pci["p_P"]] = -1
-        coef_matrix[11, vci["A"]] = 1 / v["sigma_A"]
-        coef_matrix[11, vci["P"]] = (
-            -(1 / v["sigma_A"] - 1 / v["sigma_nLA"]) * v["GammanLA_P"]
-            - 1 / v["sigma_nLA"]
-        )
-        coef_matrix[11, vci["MA"]] = (
-            -(1 / v["sigma_A"] - 1 / v["sigma_nLA"]) * v["GammanLA_MA"]
-        )
-        coef_matrix[11, vci["W"]] = (
-            -(1 / v["sigma_A"] - 1 / v["sigma_nLA"]) * v["GammanLA_W"]
-        )
-        coef_matrix[11, vci["Eps_A"]] = (
-            -(1 / v["sigma_A"] - 1 / v["sigma_nLA"]) * v["GammanLA_EpsA"]
-        )
+        coef_matrix[11, pci['p_A']] = 1
+        coef_matrix[11, pci['p_P']] = -1
+        coef_matrix[11, vci['A']] = 1/v['sigma_A']
+        coef_matrix[11, vci['P']] = -(1/v['sigma_A'] - 1/v['sigma_nLA'])*v['GammanLA_P'] - 1/v['sigma_nLA']
+        coef_matrix[11, vci['MA']] = -(1/v['sigma_A'] - 1/v['sigma_nLA'])*v['GammanLA_MA'] 
+        coef_matrix[11, vci['W']] = -(1/v['sigma_A'] - 1/v['sigma_nLA'])*v['GammanLA_W'] 
+        coef_matrix[11, vci['Eps_A']] = -(1/v['sigma_A'] - 1/v['sigma_nLA'])*v['GammanLA_EpsA']
 
         # foc: agric. wrt P and MA
-        coef_matrix[12, pci["p_P"]] = 1
-        coef_matrix[12, pci["p_MA"]] = -1
-        coef_matrix[12, vci["MA"]] = -1 / v["sigma_nLA"]
-        coef_matrix[12, vci["P"]] = 1 / v["sigma_nLA"]
+        coef_matrix[12, pci['p_P']] = 1
+        coef_matrix[12, pci['p_MA']] = -1
+        coef_matrix[12, vci['MA']] = -1/v['sigma_nLA']
+        coef_matrix[12, vci['P']] = 1/v['sigma_nLA']
 
         # foc: agric. wrt P and W
-        coef_matrix[13, pci["p_P"]] = 1
-        coef_matrix[13, pci["p_W"]] = -1
-        coef_matrix[13, vci["W"]] = -1 / v["sigma_nLA"]
-        coef_matrix[13, vci["P"]] = 1 / v["sigma_nLA"]
+        coef_matrix[13, pci['p_P']] = 1
+        coef_matrix[13, pci['p_W']] = -1
+        coef_matrix[13, vci['W']] = -1/v['sigma_nLA']
+        coef_matrix[13, vci['P']] = 1/v['sigma_nLA']
 
         # foc: agric. wrt P and Eps_A
-        coef_matrix[14, pci["p_P"]] = 1
-        coef_matrix[14, pci["p_Eps"]] = -1
-        coef_matrix[14, vci["Eps_A"]] = -1 / v["sigma_nLA"]
-        coef_matrix[14, vci["P"]] = 1 / v["sigma_nLA"]
+        coef_matrix[14, pci['p_P']] = 1
+        coef_matrix[14, pci['p_Eps']] = -1
+        coef_matrix[14, vci['Eps_A']] = -1/v['sigma_nLA']
+        coef_matrix[14, vci['P']] = 1/v['sigma_nLA']
 
         # foc: Eps. wrt E_Eps
-        coef_matrix[15, pci["p_Eps"]] = 1
-        coef_matrix[15, pci["p_E"]] = -1
-        coef_matrix[15, vci["Eps"]] = 1 / v["sigma_Eps"]
-        coef_matrix[15, vci["E_Eps"]] = -1 / v["sigma_Eps"]
+        coef_matrix[15, pci['p_Eps']] = 1
+        coef_matrix[15, pci['p_E']] = -1
+        coef_matrix[15, vci['Eps']] = 1/v['sigma_Eps']
+        coef_matrix[15, vci['E_Eps']] = -1/v['sigma_Eps']
 
         # foc: Eps. wrt A_B
-        policy_vector[16] = biofuel_tax / (1 + v["tau_E"])
-        coef_matrix[16, pci["p_Eps"]] = 1
-        coef_matrix[16, pci["p_A"]] = -1
-        coef_matrix[16, vci["Eps"]] = 1 / v["sigma_Eps"]
-        coef_matrix[16, vci["A_B"]] = -1 / v["sigma_Eps"]
+        policy_vector[16] = biofuel_tax/(1+v['tau_E'])
+        coef_matrix[16, pci['p_Eps']] = 1
+        coef_matrix[16, pci['p_A']] = -1
+        coef_matrix[16, vci['Eps']] = 1/v['sigma_Eps']
+        coef_matrix[16, vci['A_B']] = -1/v['sigma_Eps']
 
         # foc: Eps. wrt R
-        coef_matrix[17, pci["p_Eps"]] = 1
-        coef_matrix[17, pci["p_R"]] = -1
-        coef_matrix[17, vci["Eps"]] = 1 / v["sigma_Eps"]
-        coef_matrix[17, vci["R"]] = -1 / v["sigma_Eps"]
+        coef_matrix[17, pci['p_Eps']] = 1
+        coef_matrix[17, pci['p_R']] = -1
+        coef_matrix[17, vci['Eps']] = 1/v['sigma_Eps']
+        coef_matrix[17, vci['R']] = -1/v['sigma_Eps']
 
         # foc: P wrt E_P
-        coef_matrix[18, pci["p_P"]] = 1
-        coef_matrix[18, pci["p_E"]] = -1
-        coef_matrix[18, vci["P"]] = 1 / v["sigma_P"]
-        coef_matrix[18, vci["E_P"]] = -1 / v["sigma_P"]
+        coef_matrix[18, pci['p_P']] = 1
+        coef_matrix[18, pci['p_E']] = -1
+        coef_matrix[18, vci['P']] = 1/v['sigma_P']
+        coef_matrix[18, vci['E_P']] = -1/v['sigma_P']
 
         # foc: P wrt Pho
-        coef_matrix[19, pci["p_P"]] = 1
-        coef_matrix[19, pci["p_Pho"]] = -1
-        coef_matrix[19, vci["P"]] = 1 / v["sigma_P"]
-        coef_matrix[19, vci["Pho"]] = -1 / v["sigma_P"]
+        coef_matrix[19, pci['p_P']] = 1
+        coef_matrix[19, pci['p_Pho']] = -1
+        coef_matrix[19, vci['P']] = 1/v['sigma_P']
+        coef_matrix[19, vci['Pho']] = -1/v['sigma_P']
 
         # foc: P wrt MP
-        coef_matrix[20, pci["p_P"]] = 1
-        coef_matrix[20, pci["p_MP"]] = -1
-        coef_matrix[20, vci["P"]] = 1 / v["sigma_P"]
-        coef_matrix[20, vci["MP"]] = -1 / v["sigma_P"]
+        coef_matrix[20, pci['p_P']] = 1
+        coef_matrix[20, pci['p_MP']] = -1
+        coef_matrix[20, vci['P']] = 1/v['sigma_P']
+        coef_matrix[20, vci['MP']] = -1/v['sigma_P']
 
         # foc: T wrt L_T
-        coef_matrix[21, pci["p_T"]] = 1
-        coef_matrix[21, pci["p_L"]] = -1
-        coef_matrix[21, vci["T"]] = 1 / v["sigma_T"]
-        coef_matrix[21, vci["L_T"]] = -1 / v["sigma_T"] - v["V_T"]
+        coef_matrix[21, pci['p_T']] = 1
+        coef_matrix[21, pci['p_L']] = -1
+        coef_matrix[21, vci['T']] = 1/v['sigma_T']
+        coef_matrix[21, vci['L_T']] = -1/v['sigma_T'] - v['V_T']
 
         # foc: T wrt MT
-        coef_matrix[22, pci["p_T"]] = 1
-        coef_matrix[22, pci["p_MT"]] = -1
-        coef_matrix[22, vci["T"]] = 1 / v["sigma_T"]
-        coef_matrix[22, vci["MT"]] = -1 / v["sigma_T"]
+        coef_matrix[22, pci['p_T']] = 1
+        coef_matrix[22, pci['p_MT']] = -1
+        coef_matrix[22, vci['T']] = 1/v['sigma_T']
+        coef_matrix[22, vci['MT']] = -1/v['sigma_T']
 
         # foc: Y wrt EpsY
-        coef_matrix[23, pci["p_Y"]] = 1
-        coef_matrix[23, pci["p_Eps"]] = -1
-        coef_matrix[23, vci["Y"]] = 1 / v["sigma_Y"]
-        coef_matrix[23, vci["Eps_Y"]] = -1 / v["sigma_Y"]
+        coef_matrix[23, pci['p_Y']] = 1
+        coef_matrix[23, pci['p_Eps']] = -1
+        coef_matrix[23, vci['Y']] = 1/v['sigma_Y']
+        coef_matrix[23, vci['Eps_Y']] = -1/v['sigma_Y']
 
         # foc: Y wrt MY
-        coef_matrix[24, pci["p_Y"]] = 1
-        coef_matrix[24, pci["p_MY"]] = -1
-        coef_matrix[24, vci["Y"]] = 1 / v["sigma_Y"]
-        coef_matrix[24, vci["MY"]] = -1 / v["sigma_Y"]
+        coef_matrix[24, pci['p_Y']] = 1
+        coef_matrix[24, pci['p_MY']] = -1
+        coef_matrix[24, vci['Y']] = 1/v['sigma_Y']
+        coef_matrix[24, vci['MY']] = -1/v['sigma_Y']
 
         # foc: Fi wrt E_Fi
-        coef_matrix[25, pci["p_Fi"]] = 1
-        coef_matrix[25, pci["p_E"]] = -1
-        coef_matrix[25, vci["Fi"]] = 1 / v["sigma_Fi"]
-        coef_matrix[25, vci["E_Fi"]] = -1 / v["sigma_Fi"]
+        coef_matrix[25, pci['p_Fi']] = 1
+        coef_matrix[25, pci['p_E']] = -1
+        coef_matrix[25, vci['Fi']] = 1/v['sigma_Fi']
+        coef_matrix[25, vci['E_Fi']] = -1/v['sigma_Fi']
 
         # foc: Fi wrt MFi
-        coef_matrix[26, pci["p_Fi"]] = 1
-        coef_matrix[26, pci["p_MFi"]] = -1
-        coef_matrix[26, vci["Fi"]] = 1 / v["sigma_Fi"]
-        coef_matrix[26, vci["MFi"]] = -1 / v["sigma_Fi"]
+        coef_matrix[26, pci['p_Fi']] = 1
+        coef_matrix[26, pci['p_MFi']] = -1
+        coef_matrix[26, vci['Fi']] = 1/v['sigma_Fi']
+        coef_matrix[26, vci['MFi']] = -1/v['sigma_Fi']
 
         # foc: fossil extraction
-        policy_vector[27] = 1.0 / (1 + v["tau_E"])
-        coef_matrix[27, pci["p_E"]] = 1
-        coef_matrix[27, vci["E"]] = -v["Lambda_E"]
+        policy_vector[27] = 1.0/(1+v['tau_E'])
+        coef_matrix[27, pci['p_E']] = 1
+        coef_matrix[27, vci['E']] = -v['Lambda_E'] 
 
         # foc: phosphate extraction
-        coef_matrix[28, pci["p_Pho"]] = 1
-        coef_matrix[28, vci["Pho"]] = -v["Lambda_Pho"]
+        coef_matrix[28, pci['p_Pho']] = 1
+        coef_matrix[28, vci['Pho']] = -v['Lambda_Pho'] 
 
         # foc: water extraction
-        coef_matrix[29, pci["p_W"]] = 1
-        coef_matrix[29, vci["W"]] = -v["Lambda_W"]
+        coef_matrix[29, pci['p_W']] = 1
+        coef_matrix[29, vci['W']] = -v['Lambda_W']
 
         # foc: renewables extraction
-        coef_matrix[30, pci["p_R"]] = 1
-        coef_matrix[30, vci["R"]] = -v["Lambda_R"]
+        coef_matrix[30, pci['p_R']] = 1
+        coef_matrix[30, vci['R']] = -v['Lambda_R']
 
         # foc: MA extraction
-        coef_matrix[31, pci["p_MA"]] = 1
-        coef_matrix[31, vci["MA"]] = -v["Lambda_MA"]
+        coef_matrix[31, pci['p_MA']] = 1
+        coef_matrix[31, vci['MA']] = -v['Lambda_MA']
 
         # foc: MFi extraction
-        coef_matrix[32, pci["p_MFi"]] = 1
-        coef_matrix[32, vci["MFi"]] = -v["Lambda_MFi"]
+        coef_matrix[32, pci['p_MFi']] = 1
+        coef_matrix[32, vci['MFi']] = -v['Lambda_MFi']
 
         # foc: MP extraction
-        coef_matrix[33, pci["p_MP"]] = 1
-        coef_matrix[33, vci["MP"]] = -v["Lambda_MP"]
+        coef_matrix[33, pci['p_MP']] = 1
+        coef_matrix[33, vci['MP']] = -v['Lambda_MP']
 
         # foc: MT extraction
-        coef_matrix[34, pci["p_MT"]] = 1
-        coef_matrix[34, vci["MT"]] = -v["Lambda_MT"]
+        coef_matrix[34, pci['p_MT']] = 1
+        coef_matrix[34, vci['MT']] = -v['Lambda_MT']
 
         # foc: MY extraction
-        coef_matrix[35, pci["p_MY"]] = 1
-        coef_matrix[35, vci["MY"]] = -v["Lambda_MY"]
+        coef_matrix[35, pci['p_MY']] = 1
+        coef_matrix[35, vci['MY']] = -v['Lambda_MY']
 
         # foc: U wrt A_F & Fi
-        coef_matrix[36, pci["p_A"]] = 1
-        coef_matrix[36, pci["p_Fi"]] = -1
-        coef_matrix[36, vci["A_F"]] = 1 / v["sigma_F"]
-        coef_matrix[36, vci["Fi"]] = -1 / v["sigma_F"]
+        coef_matrix[36, pci['p_A']] = 1
+        coef_matrix[36, pci['p_Fi']] = -1
+        coef_matrix[36, vci['A_F']] = 1/v['sigma_F']
+        coef_matrix[36, vci['Fi']] = -1/v['sigma_F']
 
         # foc: U wrt T & L_U
-        if not land_policy:
-            coef_matrix[37, pci["p_T"]] = 1
-            coef_matrix[37, pci["p_L"]] = -1
-            coef_matrix[37, vci["T"]] = 1 / v["sigma_nF"]
-            coef_matrix[37, vci["L_U"]] = -1 / v["sigma_nF"]
-        else:
-            coef_matrix[37, vci["L_U"]] = 1
+        coef_matrix[37, pci['p_T']] = 1
+        coef_matrix[37, pci['p_L']] = -1
+        coef_matrix[37, vci['T']] = 1/v['sigma_nF']
+        coef_matrix[37, vci['L_U']] = -1/v['sigma_nF']
 
         # foc: U wrt T & Y
-        coef_matrix[38, pci["p_T"]] = 1
-        coef_matrix[38, pci["p_Y"]] = -1
-        coef_matrix[38, vci["T"]] = 1 / v["sigma_nF"]
-        coef_matrix[38, vci["Y"]] = -1 / v["sigma_nF"]
+        coef_matrix[38, pci['p_T']] = 1
+        coef_matrix[38, pci['p_Y']] = -1
+        coef_matrix[38, vci['T']] = 1/v['sigma_nF']
+        coef_matrix[38, vci['Y']] = -1/v['sigma_nF']
 
         # foc: U wrt A_F & Y
-        coef_matrix[39, pci["p_A"]] = 1
-        coef_matrix[39, pci["p_Y"]] = -1
-        coef_matrix[39, vci["A_F"]] = (
-            1 / v["sigma_F"] + (1 / v["sigma_U"] - 1 / v["sigma_F"]) * v["GammaF_AF"]
-        )
-        coef_matrix[39, vci["Y"]] = (
-            -1 / v["sigma_nF"] - (1 / v["sigma_U"] - 1 / v["sigma_nF"]) * v["GammanF_Y"]
-        )
-        coef_matrix[39, vci["Fi"]] = (1 / v["sigma_U"] - 1 / v["sigma_F"]) * v[
-            "GammaF_Fi"
-        ]
-        coef_matrix[39, vci["T"]] = (
-            -(1 / v["sigma_U"] - 1 / v["sigma_nF"]) * v["GammanF_T"]
-        )
-        coef_matrix[39, vci["L_U"]] = (
-            -(1 / v["sigma_U"] - 1 / v["sigma_nF"]) * v["GammanF_LU"]
-        )
+        coef_matrix[39, pci['p_A']] = 1
+        coef_matrix[39, pci['p_Y']] = -1
+        coef_matrix[39, vci['A_F']] = 1/v['sigma_F'] + (1/v['sigma_U'] - 1/v['sigma_F'])*v['GammaF_AF']
+        coef_matrix[39, vci['Y']] = -1/v['sigma_nF'] - (1/v['sigma_U'] - 1/v['sigma_nF'])*v['GammanF_Y']
+        coef_matrix[39, vci['Fi']] = (1/v['sigma_U'] - 1/v['sigma_F'])*v['GammaF_Fi']
+        coef_matrix[39, vci['T']] = -(1/v['sigma_U'] - 1/v['sigma_nF'])*v['GammanF_T']
+        coef_matrix[39, vci['L_U']] = -(1/v['sigma_U'] - 1/v['sigma_nF'])*v['GammanF_LU']
 
         # foc: Budget
-        coef_matrix[40, pci["p_A"]] = v["GammaU_AF"]
-        coef_matrix[40, vci["A_F"]] = v["GammaU_AF"]
-        coef_matrix[40, pci["p_Y"]] = v["GammaU_Y"]
-        coef_matrix[40, vci["Y"]] = v["GammaU_Y"]
-        coef_matrix[40, pci["p_Fi"]] = v["GammaU_Fi"]
-        coef_matrix[40, vci["Fi"]] = v["GammaU_Fi"]
-        coef_matrix[40, pci["p_L"]] = v["GammaU_LU"]
-        coef_matrix[40, vci["L_U"]] = v["GammaU_LU"]
-        coef_matrix[40, pci["p_T"]] = v["GammaU_T"]
-        coef_matrix[40, vci["T"]] = v["GammaU_T"]
+        coef_matrix[40, pci['p_A']] = v['GammaU_AF']
+        coef_matrix[40, vci['A_F']] = v['GammaU_AF']
+        coef_matrix[40, pci['p_Y']] = v['GammaU_Y']
+        coef_matrix[40, vci['Y']] = v['GammaU_Y']
+        coef_matrix[40, pci['p_Fi']] = v['GammaU_Fi']
+        coef_matrix[40, vci['Fi']] = v['GammaU_Fi']
+        coef_matrix[40, pci['p_L']] = v['GammaU_LU']
+        coef_matrix[40, vci['L_U']] = v['GammaU_LU']
+        coef_matrix[40, pci['p_T']] = v['GammaU_T']
+        coef_matrix[40, vci['T']] = v['GammaU_T']
 
         return coef_matrix, policy_vector
 
-    def gen_results(self, robust_check=True, biofuel_tax=0, land_policy=False):
+    def gen_results(self, robust_check=True, biofuel_tax=0):
 
         sigma_U = self.sigma_U
         sigma_F = self.sigma_F
@@ -437,13 +415,12 @@ class SolveModel(object):
         GammaU_LU = GammaU_F * GammanF_LU
         GammaU_T = GammaU_F * GammanF_T
         GammaA_MA = GammaA_nLA * GammanLA_MA
-
+        
         local_variables = locals()
         local_variables.pop("robust_check", None)
         local_variables.pop("biofuel_tax", None)
         local_variables.pop("var_desc_dict", None)
         local_variables.pop("price_desc_dict", None)
-        local_variables.pop("land_policy", None)
 
         # print(local_variables)
 
@@ -524,7 +501,7 @@ class SolveModel(object):
             p = lv_strings.copy()
             p.update(lc)
             coef_matrix, policy_vector = self.gen_coef_matrix(
-                p, biofuel_tax, land_policy
+                p, biofuel_tax
             )
             # Invert cooeficient matrix and multiply with policy vector
             results = np.dot(np.linalg.inv(coef_matrix), policy_vector)
@@ -541,10 +518,11 @@ class SolveModel(object):
         p = lv_strings.copy()
         p.update(lc)
 
-        coef_matrix, policy_vector = self.gen_coef_matrix(p, biofuel_tax, land_policy)
+        coef_matrix, policy_vector = self.gen_coef_matrix(p, biofuel_tax)
+        
         # Invert cooeficient matrix and multiply with policy vector
         mean_results = np.dot(np.linalg.inv(coef_matrix), policy_vector)
-        # print(mean_results)
+        #print(mean_results)
 
         # display results in table
         sol_var_list = []
@@ -708,7 +686,7 @@ def solve(params):
         # print(model_params)
         sm = SolveModel(model_params)
         df_carbontax_quantities, df_carbontax_prices = sm.gen_results(
-            robust_check=False, biofuel_tax=0, land_policy=False
+            robust_check=False, biofuel_tax=0
         )
         df_carbontax_quantities = sm.pb_effects(df_carbontax_quantities)
         for idx, row in df_carbontax_quantities.iterrows():
