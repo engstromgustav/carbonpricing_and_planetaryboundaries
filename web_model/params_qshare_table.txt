@@ -1,0 +1,17 @@
+\begin{table}[!ht]
+\centering
+\caption{\textbf{Parameters - Quantity shares}}
+\begin{tabular}{lll} 
+\hline
+\textit{Parameter} & \textit{source} & \textit{value} } \\
+\hline
+$Q_{L,L_A}$ & source: \cite{lambin2011global} & Q_LA   \\
+$Q_{L,L_T}$ & source: \cite{lambin2011global} & Q_LT  \\
+$Q_{A,A_B}$ & Derived in section \ref{sec:dataparams}.  & Q_AB  \\
+$Q_{\mathcal{E},\mathcal{E}_A}$ & Derived in section \ref{sec:dataparams}.  & Q_EpsA   \\
+$Q_{E,E_P}$ & Derived in section \ref{sec:dataparams}. & Q_EP   \\
+$Q_{E,E_F}$ & Derived in section \ref{sec:dataparams}.  & Q_EFi   \\
+\hline
+\end{tabular}
+\label{Tab:QuantityShares}
+\end{table}

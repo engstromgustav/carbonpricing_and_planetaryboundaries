@@ -1,0 +1,29 @@
+\begin{table}[!ht]
+\centering
+\caption{\textbf{Parameters - Elasticities and Quantities.} The values are depicted as [min, max, mean] where the min and max values are used in the sensitivity analysis.}
+\begin{tabular}{lll}
+\hline
+\textit{Parameter} & \textit{source} & \textit{value} \\
+\hline
+$\sigma_U$ & Ref. \cite{hamilton2001using} & sigma_U \\
+$\sigma_\mathcal{F}$ & Ref. \cite{delgado2003fish}. & sigma_F \\
+$\sigma_F$ & Standard values for extractive sectors used in GTAP \cite{golub2007projecting}. & sigma_Fi \\
+$\sigma_T$ & Standard values for extractive sectors used in GTAP  \cite{golub2007projecting}. & sigma_T \\
+$\sigma_{\tilde{\mathcal{F}}}$ & Drawn from estimates of substitutability derived from \cite{drupp2018limits} & sigma_nF \\
+$\sigma_{A}$ & Ref. \cite{steinbuks2016confronting} & sigma_A \\
+$\sigma_{P}$ & Literature suggests high  complementarity, see e.g. \cite{aagren2012nutrient}. & sigma_P \\
+$\sigma_{\tilde{L}_A}$ & Assumed based on reading of the literature & sigma_nLA \\
+$\sigma_{\mathcal{E}}$ & Ref. \cite{Papageorgiou2017}  & sigma_Eps \\
+$\sigma_{Y}$ & Based on Table 2 in \cite{sorrell2014energy} & sigma_Y \\
+$\supel{R}$ & Ref. \cite{johnson2014cost}   & 1/2.7 \\
+$\supel{E}$ & Based on estimates in  \cite{Burniaux2012}   & Lambda_E \\
+$\supel{W}$ & Based on \cite{wheeler2008price}   & 1/1.79 \\
+$\supel{\mathcal{P}}$ & Assumed based on reading of the  literature    & 1/1.5 \\
+$\supel{M_X}$ & Assumed with wide span for robustness  & Lambda_M \\
+$V_T$ & Based on \cite{steinbuks2016confronting} & V_T  \\
+$V_A$ & Based on \cite{steinbuks2016confronting} & V_A  \\
+$\tau_E$ & A global carbon tax currently does  not exist. & tau_E  \\
+\hline
+\end{tabular}
+\label{Tab:Elasticities}
+\end{table}

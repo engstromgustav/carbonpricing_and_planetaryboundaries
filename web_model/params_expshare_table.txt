@@ -1,0 +1,26 @@
+\begin{table}[!ht]
+\centering
+\caption{\textbf{Parameters: expenditure shares (source: GTAP)}}
+\begin{tabular}{ll} 
+\hline
+\textit{Expenditure share} & \textit{value} \\
+\hline
+$\prodel{A}{L_A}$ & GammaA_LA  \\
+$\prodel{\tilde{L}_A}{P}$ & GammanLA_P   \\ 
+$\prodel{\tilde{L}_A}{W}$ & GammanLA_W  \\ 
+$\prodel{\tilde{L}_A}{\mathcal{E}_A}$ & GammanLA_EpsA  \\ 
+$\prodel{\mathcal{E}}{A_B}$ & GammaEps_AB   \\
+$\prodel{\mathcal{E}}{E_\mathcal{E}}$ & GammaEps_EEps   \\
+$\prodel{U}{\mathcal{F}}$ & GammaU_F   \\ 
+$\prodel{\mathcal{F}}{F}$ & GammaF_Fi   \\ 
+$\prodel{\tilde{\mathcal{F}}}{Y}$ & GammanF_Y   \\ 
+$\prodel{\tilde{\mathcal{F}}}{L_U}$ & GammanF_LU   \\ 
+$\prodel{T}{L_T}$ & GammaT_LT   \\
+$\prodel{Y}{\mathcal{E}_Y}$ & GammaY_EpsY   \\
+$\prodel{P}{E_P}$ & GammaP_EP   \\
+$\prodel{P}{\mathcal{P}}$ & GammaP_Pho   \\
+$\prodel{F}{E_F}$ & GammaFi_EFi   \\
+\hline
+\end{tabular}
+\label{Tab:FactorShares}
+\end{table}
