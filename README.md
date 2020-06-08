@@ -32,6 +32,7 @@ Python installation instructions can be found here: https://docs.conda.io/en/lat
 Pandas and Numpy can be installed using pip.
 
 Pandas: https://pypi.org/project/pandas/ 
+
 Numpy: https://pypi.org/project/numpy/
 
 Running the code in the ipynb file also requires Jupyter Notebook to be installed. See:
@@ -39,7 +40,7 @@ https://jupyter.org/install
 
 Note: typical install time should be less than 30 min.
 
-# Demo and instructions
+## Demo and instructions
 
 The results found in the paper "Carbon pricing and planetary boundaries" can be generated using the code in the Jupyter Notebook "PB-simulation_Nature_Communications - Final.ipynb". Expected output should match. Runtime should be around 10 minutes on a standard notebook. Further instructions and comments can be found in the code.
 
